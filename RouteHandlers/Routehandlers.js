@@ -20,8 +20,9 @@ exports.getAllData = async(req,res)=>{
       }
 }
 exports.getDatabyRoll = async(req,res)=>{
+  console.log(req.params.rollnumber)
       try{
-        const data = await Model.find(req.params.roll)
+        const data = await Model.find({ rollnumber: req.params.rollnumber })
         res.status(200).json({
             status:"success",
             data:{
@@ -55,7 +56,7 @@ exports.CreateData = async(req,res)=>{
 }
 exports.updateData = async(req,res)=>{
       try{
-        const data = await Model.findByIdAndUpdate(req.params.roll ,req.body , {new:true , runValidators:true})
+        const data = await Model.updateOne({rollnumber:req.params.rollnumber},req.body , {new:true , runValidators:true})
         res.status(200).json({
             status:"success",
             data:{
@@ -72,7 +73,7 @@ exports.updateData = async(req,res)=>{
 }
 exports.DeleteData = async(req,res)=>{
       try{
-        await Model.findByIdAndDelete(req.params.roll)
+        await Model.deleteOne({rollnumber:req.params.rollnumber})
         res.status(200).json({
             status:"success",
             data:null
