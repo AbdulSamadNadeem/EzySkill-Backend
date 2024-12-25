@@ -7,9 +7,7 @@ exports.getAllData = async(req,res)=>{
         res.status(200).json({
             status:"success",
             lenght:data.length,
-            data:{
-                data,
-            }
+            data:data
         })
 
       }catch(e){
@@ -25,9 +23,7 @@ exports.getDatabyRoll = async(req,res)=>{
         const data = await Model.find({ rollnumber: req.params.rollnumber })
         res.status(200).json({
             status:"success",
-            data:{
-                data:data
-            }
+            data:data
         })
 
       }catch(e){
@@ -42,9 +38,7 @@ exports.CreateData = async(req,res)=>{
         const data = await Model.create(req.body)
         res.status(201).json({
             status:"success",
-            data:{
-                data:data
-            }
+            data:data
         })
 
       }catch(e){
@@ -57,13 +51,19 @@ exports.CreateData = async(req,res)=>{
 exports.updateData = async(req,res)=>{
       try{
         const data = await Model.updateOne({rollnumber:req.params.rollnumber},req.body , {new:true , runValidators:true})
-        res.status(200).json({
-            status:"success",
-            data:{
-                data:data
-            }
-        })
-
+        if(data.modifiedCount > 0 ){
+          const updatedData = await Model.findOne({rollnumber:req.params.rollnumber})
+          res.status(200).json({
+              status:"success",
+              data:updatedData
+          })
+        }
+        else{
+          res.status(404).json({
+            status:"failed",
+            message:"No changes made or student not found"
+           })
+        }
       }catch(e){
            res.status(400).json({
             status:"failed",
@@ -73,11 +73,20 @@ exports.updateData = async(req,res)=>{
 }
 exports.DeleteData = async(req,res)=>{
       try{
-        await Model.deleteOne({rollnumber:req.params.rollnumber})
-        res.status(200).json({
-            status:"success",
-            data:null
-        })
+        const Data = await Model.deleteOne({rollnumber:req.params.rollnumber})
+        if(Data.deletedCount > 0 ){
+          const updatedData = await Model.find()
+          res.status(200).json({
+              status:"success",
+              data:updatedData
+          })
+        }
+        else{
+          res.status(404).json({
+            status:"failed",
+            message:"No changes made or student not found"
+           })
+        }
 
       }catch(e){
            res.status(400).json({
