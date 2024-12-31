@@ -36,16 +36,28 @@ const AuthSchema = new mongoose.Schema({
         message:"Password Should Be Atleast 8 characters long and includes one uppercase letter, one lowercase letter, and one number"
 
     },
-    confirmpassword:{
-        type:String,
-        required:[true , 'This Field Is Required']
-    }
+})
+
+AuthSchema.virtual('confirmpassword')
+.set(function(value){
+    this._confirmpassword = value
+})
+.get(function(){
+    return this._confirmpassword
+})
+
+AuthSchema.pre('validate' , async function (next) {
+         const user = this
+         if(user.isModified('password') && this.password !== this.confirmpassword ){
+            return next('Password Incorrect')
+         }
+         next()
 })
 
 AuthSchema.pre('save' , async function (next) {
     const user = this
 
-     if(user.isModified('password')){
+     if(!user.isModified('password')){
         return next()
      }
      try{

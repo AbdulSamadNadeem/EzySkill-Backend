@@ -25,7 +25,6 @@ exports.RegisterUser = async (req, res) => {
       status: "Success",
       message: "User Created Successfully",
       token,
-      user: response,
     });
   } catch (e) {
     console.log(e);
@@ -55,12 +54,11 @@ exports.LoginUser = async (req, res) => {
         message: "Invalid Password",
       });
     }
-    const token = SignToken(response.id);
+    const token = SignToken(user.id);
     res.status(200).json({
       status: "success",
       message: "User Login successfully",
       token,
-      data: user,
     });
   } catch (e) {
     console.log(e);
