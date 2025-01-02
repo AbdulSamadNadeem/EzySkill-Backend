@@ -20,13 +20,10 @@ exports.RegisterUser = async (req, res) => {
         message: "Email Alreadt Exist",
       });
     }
-    const response = await Authmodel.create(req.body);
-    const token = SignToken(response.id);
-
+    const response = await Authmodel.create(req.body)
     res.status(201).json({
       status: "Success",
-      message: "User Created Successfully",
-      token,
+      message: "User Created Successfully"
     });
   } catch (e) {
     console.log(e);
