@@ -36,6 +36,12 @@ const AuthSchema = new mongoose.Schema({
         message:"Password Should Be Atleast 8 characters long and includes one uppercase letter, one lowercase letter, and one number"
 
     },
+    resetpasstoken :{
+        type:String,
+    },
+    resetpasstokenexpires:{
+        type:Date,
+    }
 })
 
 AuthSchema.virtual('confirmpassword')
@@ -49,7 +55,7 @@ AuthSchema.virtual('confirmpassword')
 AuthSchema.pre('validate' , async function (next) {
          const user = this
          if(user.isModified('password') && this.password !== this.confirmpassword ){
-            return next('Password Incorrect')
+            return next('Password Not Mathced')
          }
          next()
 })

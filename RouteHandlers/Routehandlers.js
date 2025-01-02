@@ -3,7 +3,7 @@ const Model = require('../Model/Model')
 exports.getAllData = async(req,res)=>{
       try{
 
-        const data = await Model.find().sort('admission_date')
+        const data = await Model.find().sort('rollnumber')
         res.status(200).json({
             status:"success",
             lenght:data.length,
